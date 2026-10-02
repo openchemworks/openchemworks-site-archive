@@ -151,9 +151,11 @@
   <div class="container">
     <div class="section-title" style="margin-bottom:1.2rem"><h2>Get the next one in your inbox</h2><div class="rule"></div>
     <p>One email per post &mdash; the science, no spam, no list-selling. Unsubscribe anytime.</p></div>
-    <form class="capture-form" data-subject="Subscribe &mdash; OpenChemWorks insights" novalidate style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;max-width:660px">
+    <form class="capture-form" data-subject="Subscribe &mdash; OpenChemWorks insights" data-segment="subscribe-insights" novalidate style="display:flex;flex-wrap:wrap;gap:1rem;align-items:end;max-width:660px">
       <div class="f" style="flex:1 1 180px"><label for="cap-name">Name</label><input id="cap-name" name="name" type="text" autocomplete="name" placeholder="Jane"></div>
-      <div class="f" style="flex:2 1 240px"><label for="cap-email">Email</label><input id="cap-email" name="email" type="email" autocomplete="email" required placeholder="jane@company.com"></div>
+      <div class="f" style="flex:2 1 240px"><label for="cap-email">Email</label>
+      <div class="f" style="flex:1 1 100%"><label for="cap-products">What products are you most interested in? <span style="opacity:.6;font-weight:400">(optional)</span></label><textarea id="cap-products" name="products" rows="2" placeholder="e.g. BCAA drinks, protein powder checks&hellip;"></textarea></div><input id="cap-email" name="email" type="email" autocomplete="email" required placeholder="jane@company.com"></div>
+      <input type="text" name="website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:0;width:0">
       <div class="f-actions"><button class="btn btn-orange" type="submit">Notify me</button></div>
     </form>
   </div>
