@@ -98,22 +98,31 @@
     box.addEventListener('mouseleave',function(){ on(null); });
   })();
 })();
-
-  /* email capture forms (insights etc.) — same mailto hand-off as the quote form */
+  /* email capture forms — POST to Google Forms backend, mailto fallback */
   (function(){
     var TO='info@openchemworks.com';
+    var FORM_URL='https://docs.google.com/forms/d/e/1FAIpQLSf6R9wOZyCOOscorQU9HlMEWR88DSvN7MR9f1kzUFdb5_J8cA/formResponse';
+    var E={name:'entry.1403052073',email:'entry.412558084',products:'entry.1173069997',page:'entry.820294829',segment:'entry.1499992690'};
     document.querySelectorAll('form.capture-form').forEach(function(f){
       f.addEventListener('submit',function(e){
         e.preventDefault();
         var g=function(s){var el=f.querySelector(s);return el?el.value.trim():'';};
-        var name=g('input[name="name"]'), email=g('input[name="email"]');
+        var done=function(msg){ var s=document.createElement('div'); s.className='sent'; s.setAttribute('role','status'); s.innerHTML=msg; f.replaceWith(s); };
+        if(g('input[name="website"]')){ done('Thank you! You are on the list.'); return; } /* honeypot */
+        var name=g('input[name="name"]'), email=g('input[name="email"]'), products=g('[name="products"]');
         if(!email||email.indexOf('@')<0){f.querySelector('input[name="email"]').focus();return;}
+        var segment=f.getAttribute('data-segment')||'subscribe';
         var subject=f.getAttribute('data-subject')||'Subscribe — OpenChemWorks insights';
-        var body='Name: '+name+'\nEmail: '+email+'\n\nSource page: '+location.href;
-        window.location.href='mailto:'+TO+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
-        var s=document.createElement('div'); s.className='sent'; s.setAttribute('role','status');
-        s.innerHTML='Thank you'+(name?', '+name:'')+'. Your email app should now be open with the signup prefilled and addressed to '+TO+'. If it did not open, just email <a href="mailto:'+TO+'">'+TO+'</a> with the subject &ldquo;'+subject+'&rdquo;.';
-        f.replaceWith(s);
+        var fd=new FormData();
+        fd.append(E.name,name); fd.append(E.email,email); fd.append(E.products,products);
+        fd.append(E.page,location.href); fd.append(E.segment,segment);
+        fetch(FORM_URL,{method:'POST',mode:'no-cors',body:new URLSearchParams(fd)})
+          .then(function(){ done('Thank you'+(name?', '+name:'')+'. You are on the list &mdash; watch '+email+' for the next post.'); })
+          .catch(function(){
+            var body='Name: '+name+'\nEmail: '+email+'\nProducts of interest: '+products+'\nSegment: '+segment+'\n\nSource page: '+location.href;
+            window.location.href='mailto:'+TO+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+            done('Thank you'+(name?', '+name:'')+'. Your email app should now be open with the signup prefilled and addressed to '+TO+'. If it did not open, just email <a href="mailto:'+TO+'">'+TO+'</a> with the subject &ldquo;'+subject+'&rdquo;.');
+          });
       });
     });
   })();
