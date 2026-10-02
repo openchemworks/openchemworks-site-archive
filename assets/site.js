@@ -98,3 +98,22 @@
     box.addEventListener('mouseleave',function(){ on(null); });
   })();
 })();
+
+  /* email capture forms (insights etc.) — same mailto hand-off as the quote form */
+  (function(){
+    var TO='info@openchemworks.com';
+    document.querySelectorAll('form.capture-form').forEach(function(f){
+      f.addEventListener('submit',function(e){
+        e.preventDefault();
+        var g=function(s){var el=f.querySelector(s);return el?el.value.trim():'';};
+        var name=g('input[name="name"]'), email=g('input[name="email"]');
+        if(!email||email.indexOf('@')<0){f.querySelector('input[name="email"]').focus();return;}
+        var subject=f.getAttribute('data-subject')||'Subscribe — OpenChemWorks insights';
+        var body='Name: '+name+'\nEmail: '+email+'\n\nSource page: '+location.href;
+        window.location.href='mailto:'+TO+'?subject='+encodeURIComponent(subject)+'&body='+encodeURIComponent(body);
+        var s=document.createElement('div'); s.className='sent'; s.setAttribute('role','status');
+        s.innerHTML='Thank you'+(name?', '+name:'')+'. Your email app should now be open with the signup prefilled and addressed to '+TO+'. If it did not open, just email <a href="mailto:'+TO+'">'+TO+'</a> with the subject &ldquo;'+subject+'&rdquo;.';
+        f.replaceWith(s);
+      });
+    });
+  })();
