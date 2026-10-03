@@ -37,7 +37,7 @@
     function money(v){ return '$'+Math.round(v).toLocaleString('en-US'); }
     function calc(){
       var k=Math.max(1,Math.min(500,parseInt(n.value,10)||1));
-      var tier=k>=10?125:150, tierName=k>=10?'10+ tier':'1–9 tier';
+      var tier=k>=25?125:150, tierName=k>=25?'25+/mo tier':'standard tier';
       var per=tier+(solid.checked?30:0);
       var sub=per*k; var t=Math.max(sub,150);
       var parts=[k+' sample'+(k>1?'s':'')+' × '+money(per)+' ('+tierName+(solid.checked?' + PREP-1':'')+')'];
